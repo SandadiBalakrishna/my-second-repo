@@ -1,0 +1,38 @@
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: bankapp-stateful
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: bankdb
+  template:
+    metadata:
+      name: mytemplat
+      labels:
+        app: bankdb
+
+    spec:
+       containers:
+         - name: bankdb-cont
+           image: balakrishna9515/blood:dbimage
+           ports:
+             - containerPort: 3306
+           envFrom:
+             - configMapRef:
+                 name: bankapp-config
+           envFrom:
+             - secretRef:
+                 name: bankapp-secret
+
+           resources:
+             requests:
+               cpu: "100m"
+               memory: "128Mi"
+
+             limits:
+               cpu: "500m"
+               memory: "256Mi"
+          
